@@ -3,7 +3,7 @@ $(function() {
 
   function sendMessage () {
     var local     = $('#burb .local').val();
-    var timestamp = moment().format('YYYY-MM-DD hh:mm:ss');
+    var timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
     var content   = $('#burb .text').val();
 
     var message = {
