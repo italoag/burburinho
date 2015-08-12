@@ -1,6 +1,5 @@
 {
   "name": "burburinho",
-  "version": "0.1",
   "description": "Spyke para burburinhos",
   "main": "index.js",
   "private": true,
