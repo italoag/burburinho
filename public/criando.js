@@ -17,7 +17,7 @@ $(function() {
     if (match && match[2].length == 11) {
       return match[2];
     }else{
-      alert("Url incorrecta");
+      alert('Url incorreta');
     }
   }
 
@@ -56,11 +56,15 @@ $(function() {
   function getLabelOfType(type){
     var result = 'Texto';
 
-    if( type === 'video') result = 'Video';
-    if( type === 'quote') result = 'Aspas';
-    if( type === 'photo') result = 'Foto comentada';
-    if( type === 'gallery') result = 'Galleria de imagens';
-
+    if( type === 'video') {
+      result = 'Video';
+    } else if( type === 'quote') {
+      result = 'Aspas';
+    } else if( type === 'photo') {
+      result = 'Foto comentada';
+    } else ( type === 'gallery') {
+      result = 'Galleria de imagens';
+    }
     return result;
   }
 
@@ -105,11 +109,11 @@ $(function() {
     addBuzz();
   });
 
-  $("div.element.photo").uploadFile({
-    url:"//file-service.herokuapp.com/upload",
+  $('div.element.photo').uploadFile({
+    url:'//file-service.herokuapp.com/upload',
     multiple:false,
     dragDrop:true,
-    acceptFiles:"image/*",
+    acceptFiles:'image/*',
     fileName:'myfile',
     showPreview:false,
     showStatusAfterSuccess: false,
