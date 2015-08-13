@@ -1,4 +1,5 @@
 var express = require('express');
+var compression = require('compression');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
@@ -29,6 +30,7 @@ router.get('/test', function(req, res) {
   res.json(result);
 });
 
+app.use(compression());
 app.use('/api', router);
 
 
