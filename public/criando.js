@@ -113,8 +113,6 @@ $(function() {
     url:'//file-service.herokuapp.com/upload',
     multiple:false,
     dragDrop:true,
-    sequential:true,
-    sequentialCount:1
     acceptFiles:'image/*',
     fileName:'myfile',
     showPreview:false,
