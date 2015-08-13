@@ -4,30 +4,53 @@
   <meta charset="UTF-8">
   <title>Teste do paranaué</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <link href="http://hayageek.github.io/jQuery-Upload-File/4.0.2/uploadfile.css" rel="stylesheet">
 </head>
 <body>
 
   <select id="type">
     <option>-- Selecione ---</option>
-    <option value="burb">Burburinho</option>
+    <option value="text">Texto</option>
+    <option value="video">Video</option>
+    <option value="quote">Aspas</option>
+    <option value="photo">Foto comentada</option>
+    <option value="gallery">Galleria de imagens</option>
   </select>
 
-  <section id="burb" class="type">
-    <label>
-      Local:
-    </label>
-    <input class="local" name="local" />
-    <label>
-      Texto:
-    </label>
-    <textarea class="text" name="text"></textarea>
-  </section>
+  <div class="pure-form pure-form-stacked type">
+   <fieldset>
+     <legend>Preencha aqui:</legend>
+
+     <label class="element local" for="local">Local:</label>
+     <input class="element local" type="text" name="local" />
+
+     <label class="element text" for="text">Texto:</label>
+     <textarea class="element text" name="text"></textarea>
+
+     <label class="element video" for="text">Video:</label>
+     <input class="element video" name="text"/>
+
+     <label class="element photo" for="text">Imagem:</label>
+     <img class="element photo preview" data-src="http://farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg"/>
+     <input type="hidden" class="element photo" />
+     <div class="element photo">Subir imagem</div>
+
+     <button class="pure-button pure-button-primary go">Adicionar.</button>
+    </fieldset>
+  </div>
+  <aside>
+    <h2>Para enviar</h2>
+    <div class="list-buzz">
+
+    </div>
+  </aside>
 
 
   <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="//cdn.socket.io/socket.io-1.3.5.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+  <script src="//hayageek.github.io/jQuery-Upload-File/4.0.2/jquery.uploadfile.min.js"></script>
   <script src="/criando.js"></script>
-  <button class="go"> BORA BAEA </button>
 </body>
 </html>

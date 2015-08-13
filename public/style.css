@@ -1,0 +1,11 @@
+img.preview{
+  width: 100px;
+  height: 100px;
+}
+
+.list-buzz div:nth-child(even){
+  background-color: white;
+}
+.list-buzz div:nth-child(odd){
+  background-color: lightgray;
+}
