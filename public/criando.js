@@ -1,6 +1,7 @@
 $(function() {
   var socket = io();
   var buzzs = [];
+  var galleryListItems = [];
   var typeAndInputs = {
     'text': ['.local','.text'],
     'video': ['.local','.text','.video'],
@@ -22,6 +23,9 @@ $(function() {
   }
 
   function sendMessage (buzz) {
+    if (buzz.type === 'gallery') {
+      buzz.content = JSON.parse(buzz.content);
+    }
     socket.emit('burburinho', buzz);
   }
 
@@ -43,6 +47,8 @@ $(function() {
       buzz['url'] = '//www.youtube.com/embed/'+getYoutubeId(video);
     }else if( type === 'photo' ||  type === 'quote'){
       buzz['url'] = photo;
+    } else if (type === 'gallery') {
+      buzz['content'] = galleryListItems;
     }
 
     if(content !== ''){
@@ -69,13 +75,28 @@ $(function() {
   }
 
   function updateBuzzList(buzz){
+
+    if (buzz.type === 'gallery') {
+      var jsonContent = [];
+      var galleryContentItems = $('<ul>' + buzz.content.map(function(item) {
+        jsonContent.push('{"url": "' + item.url + '", "description": "' + item.description + '"}');
+        return  '<li>' + item.url + '</li>';
+      }) + '</ul>');
+
+      buzz.content = '[' + jsonContent.join(',') + ']';
+    } else {
+      galleryContentItems = $('<p>'+buzz.content+'</p>');
+    }
+
     var list = $('aside .list-buzz');
     var div = $('<div/>', { class: 'buzz', id:buzz.id, 'data-buzz': JSON.stringify(buzz) });
+    var galleryContentItems;
+
 
     div.append(
         $('<h2/>',{ text: getLabelOfType(buzz.type) }),
         $('<time>'+buzz.timestamp +'</time>'),
-        $('<p>'+buzz.content+'</p>'),
+        galleryContentItems,
         $('<span>'+buzz.local+'</span>'),
         $('<button/>',{
             text: 'Enviar',
@@ -100,6 +121,16 @@ $(function() {
       inputs.forEach(function(e){
         $(e).show();
       });
+
+      if (type === 'gallery') {
+        $('.multiple-image').show();
+        $('.single-image').hide();
+      } else {
+        $('.multiple-image').hide();
+        $('.multiple-image .preview').remove();
+        galleryListItems = [];
+        $('.single-image').show();
+      }
 
       $('.type').show();
     }
@@ -130,5 +161,30 @@ $(function() {
     },
   });
 
-  $('.type').hide();
+  $('.photos.multiple').uploadFile({
+    url:'//file-service.herokuapp.com/upload',
+    multiple:true,
+    dragDrop:true,
+    sequential:true,
+    sequentialCount:1,
+    acceptFiles:'image/*',
+    fileName:'myfile',
+    showPreview:false,
+    showStatusAfterSuccess: false,
+    onSubmit:function(files)
+    {
+      $('div.element.photo.multiple').hide();
+    },
+    onSuccess:function(files, data, xhr, pd)
+    {
+      galleryListItems.push({
+        url: data['link' ],
+        description: 'This is a test'
+      });
+      var newImage = '<img class="element photo preview" src="' + data['link' ]+ '"/>';
+      $('.multiple-image').prepend(newImage);
+    },
+  });
+
+  $('.type, .multiple-image').hide();
 });
