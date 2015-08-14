@@ -1,5 +1,4 @@
 $(function() {
-  var socket = io();
   var buzzs = [];
   var galleryListItems = [];
   var typeAndInputs = {
@@ -26,7 +25,7 @@ $(function() {
     if (buzz.type === 'gallery') {
       buzz.content = JSON.parse(buzz.content);
     }
-    socket.emit('burburinho', buzz);
+    $.post( '/api/burburinhos', buzz);
   }
 
   function addBuzz(){
