@@ -44,17 +44,6 @@ router.post('/burburinhos', function(req, res) {
   }
 });
 
-router.get('/test', function(req, res) {
-  var result = [];
-
-  for(var i = 0;i < 100;i++){
-    buzz.forEach(function(e){
-      result.push(e);
-    });
-  }
-
-  res.json(result);
-});
 
 app.use(compression());
 app.use('/api', router);
