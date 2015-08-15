@@ -19,6 +19,7 @@ var PASSWORD        = process.env.PASSWORD;
 var router = express.Router();
 
 function insertBuzz(db, newBuzz, callback) {
+  newBuzz.date = new Date();
   db.collection('buzzes').insertOne(newBuzz, function(err, result) {
     assert.equal(err, null);
     callback(result);
@@ -26,7 +27,7 @@ function insertBuzz(db, newBuzz, callback) {
 }
 
 function allBuzzes(db, callback) {
-  var cursor = db.collection('buzzes').find();
+  var cursor = db.collection('buzzes').find().sort({'date': -1});
   var result = [];
   cursor.each(function(err, doc) {
     assert.equal(err, null);
