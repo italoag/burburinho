@@ -56,6 +56,9 @@ $(function() {
 
     buzzs.push(buzz);
     updateBuzzList(buzz);
+
+    $('input.local, textarea.text, input.video, input.photo').val('');
+    $('.element.photo.preview').attr('src', 'http://farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg');
   }
 
   function getLabelOfType(type){
@@ -71,6 +74,17 @@ $(function() {
       result = 'Galleria de imagens';
     }
     return result;
+  }
+
+  function createAlertMessage(message) {
+    $('.list-messages').html('').html(
+      '<div class="alert alert-success" role="alert">' +
+        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+        message +
+      '</div>');
+    setTimeout(function(){
+      $('.alert.alert-success').fadeOut().remove();
+    }, 5000);
   }
 
   function updateBuzzList(buzz){
@@ -91,22 +105,41 @@ $(function() {
     var div = $('<div/>', { class: 'buzz', id:buzz.id, 'data-buzz': JSON.stringify(buzz) });
     var galleryContentItems;
 
+    if($('.to-remove')[0]) {
+      $('.to-remove').remove();
+    }
 
-    div.append(
-        $('<h2/>',{ text: getLabelOfType(buzz.type) }),
-        $('<time>'+buzz.timestamp +'</time>'),
-        galleryContentItems,
-        $('<span>'+buzz.local+'</span>'),
-        $('<button/>',{
-            text: 'Enviar',
-            click: function(){
-              sendMessage(buzz);
-            }
-        })
+    var date = buzz.timestamp.split(' ')[0].split('-', 3);
+    date.shift();
+    date.reverse();
+
+    $('table tbody').append(
+        '<tr>' +
+          '<td>' + getLabelOfType(buzz.type) + '</td>' +
+          '<td>' + date.join('/') + '</td>' +
+          '<td>' + galleryContentItems.html() + '</td>' +
+          '<td>' + buzz.local + '</td>' +
+          '<td>' +
+              '<button data-buzz-id="' + (buzzs.length - 1) + '" type="button" class="btn btn-outlined btn-theme btn-lg send-message" >Enviar</button>' +
+          '</td>' +
+        '</tr>'
     );
 
     list.append(div);
+    createAlertMessage('Conteúdo inserido na lista de rascunhos e aguardando confirmação de envio');
   }
+
+  $('body').on('click', '.send-message', function() {
+    var buzzId = $(this).data('buzz-id');
+    sendMessage(buzzs[buzzId]);
+    $('button[data-buzz-id="' + buzzId + '"]').parents('tr').remove();
+    if ( !$('table tbody tr')[0]) {
+      $('table tbody').append('<tr class="to-remove">' +
+        '<td colspan="5">Nenhum burburinho cadastrado</th>' +
+      '</tr>');
+    }
+    createAlertMessage('Conteúdo enviado para a timeline');
+  });
 
   $('#type').on('change', function(e){
     var type = $(this).val();
