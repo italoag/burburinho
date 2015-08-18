@@ -18,6 +18,9 @@ var router = express.Router();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(compression());
+app.use('/api', router);
+app.use(express.static(__dirname + '/public'));
 
 router.get('/burburinhos', function(req, res) {
     buzzesRepository.allBuzzes(function(result) {
@@ -36,12 +39,7 @@ router.post('/burburinhos', simpleAuth(), function(req, res) {
     });
 });
 
-
-app.use(compression());
-app.use('/api', router);
-
 server.listen(PORT, function () {
   console.log('Server listening at port %d', PORT);
 });
 
-app.use(express.static(__dirname + '/public'));
