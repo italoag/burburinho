@@ -1,11 +1,9 @@
 var express     = require('express');
 var compression = require('compression');
-var MongoClient = require('mongodb').MongoClient;
-var ObjectId    = require('mongodb').ObjectID;
-var assert      = require('assert');
 var bodyParser  = require('body-parser');
 
-var simpleAuth = require('./simple-auth');
+var simpleAuth          = require('./simple-auth');
+var buzzesRepository    = require('./buzzes-repository')();
 
 var app = express();
 
@@ -13,30 +11,8 @@ var server      = require('http').createServer(app);
 var io          = require('socket.io')(server);
 
 var PORT            = process.env.PORT || 5000;
-var DATABASE_URL    = process.env.DATABASE_URL;
 
 var router = express.Router();
-
-function insertBuzz(db, newBuzz, callback) {
-  newBuzz.date = new Date();
-  db.collection('buzzes').insertOne(newBuzz, function(err, result) {
-    assert.equal(err, null);
-    callback(result);
-  });
-}
-
-function allBuzzes(db, callback) {
-  var cursor = db.collection('buzzes').find().sort({'date': -1});
-  var result = [];
-  cursor.each(function(err, doc) {
-    assert.equal(err, null);
-    if (doc != null) {
-      result.push(doc);
-    } else {
-      callback(result);
-    }
-  });
-}
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -48,27 +24,18 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 router.get('/burburinhos', function(req, res) {
-    MongoClient.connect(DATABASE_URL, function(err, db) {
-        assert.equal(null, err);
-        allBuzzes(db, function(result) {
-            res.json(result);
-            db.close();
-        });
+    buzzesRepository.allBuzzes(function(result) {
+        res.json(result);
     });
 });
 
 router.post('/burburinhos', simpleAuth(), function(req, res) {
-    MongoClient.connect(DATABASE_URL, function(err, db) {
-        assert.equal(null, err);
-        insertBuzz(db, req.body, function() {
-            db.close();
+    buzzesRepository.insertBuzz(req.body, function() {
+        res.statusCode = 201;
+        res.end();
 
-            res.statusCode = 201;
-            res.end();
-
-            io.emit('burburinho', {
-                message: req.body
-            });
+        io.emit('burburinho', {
+            message: req.body
         });
     });
 });
