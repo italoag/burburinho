@@ -24,7 +24,7 @@ describe('Buzzes:', function() {
 
   it('POST: /api/burburinhos', function(done){
     api.post('/api/burburinhos')
-      .auth(process.env.USERNAME, process.env.PASSWORD)
+      .auth(process.env.API_USERNAME, process.env.API_PASSWORD)
       .send(buzz)
       .expect(201, done);
   });
@@ -33,7 +33,7 @@ describe('Buzzes:', function() {
 
 
     api.post('/api/burburinhos')
-      .auth(process.env.USERNAME, process.env.PASSWORD)
+      .auth(process.env.API_USERNAME, process.env.API_PASSWORD)
       .send(buzz)
       .expect(201);
 
