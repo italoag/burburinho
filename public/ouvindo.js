@@ -3,7 +3,7 @@
 $(function() {
   var socket = io();
 
-  socket.on('buzzes', function (data) {
+  socket.on('buzz', function (data) {
     console.log(data);
   });
 });
