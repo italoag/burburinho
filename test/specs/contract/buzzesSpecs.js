@@ -5,80 +5,60 @@ var assert = require('assert'),
 ;
 
 describe('Buzzes:', function() {
-
+  var buzz;
   before(function(done){
     require(CONFIG.ROOT_DIRECTORY + '/lib/server').startServer();
+    buzz = {
+      type: 'text',
+      content: 'This is a test',
+      timestamp: new Date().getTime()
+    };
     done();
   });
 
   it('UNAUTHENTICATED POST: /api/burburinhos', function(done){
     api.post('/api/burburinhos')
-      .send({
-        type: 'text',
-        content: 'content test',
-        timestamp: '2015-08-08 12:12:12'
-      })
+      .send(buzz)
       .expect(401, done);
   });
 
   it('POST: /api/burburinhos', function(done){
     api.post('/api/burburinhos')
       .auth(process.env.USERNAME, process.env.PASSWORD)
-      .send({
-        type: 'text',
-        content: 'content test',
-        timestamp: '2015-08-08 12:12:12'
-      })
+      .send(buzz)
       .expect(201, done);
   });
 
   it('GET: /api/burburinhos', function(done){
-    var buzz = {
-      type: 'text',
-      content: 'content test',
-      timestamp: new Date().getTime()
-    }
+
+
     api.post('/api/burburinhos')
       .auth(process.env.USERNAME, process.env.PASSWORD)
       .send(buzz)
-      .expect(201, done);
+      .expect(201);
 
     api.get('/api/burburinhos')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
+
         if (err) {
           return done(err);
         }
 
         assert(res.body instanceof Array);
 
-        console.log('AQUI');
-
         res.body.forEach(function (response) {
-          assert(typeof response.type !== 'undefined');
-          assert(typeof response.content !== 'undefined');
-          assert(typeof response.timestamp !== 'undefined');
+          assert.equal(typeof response.type !== 'undefined', true);
+          assert.equal(typeof response.content !== 'undefined', true);
+          assert.equal(typeof response.timestamp !== 'undefined', true);
         });
 
-        console.log('AQUI OUTRO');
-
-        console.log(res.body);
         var buzzExistInResponse = res.body.filter(function(element){
-          console.log(element);
           return element.timestamp === buzz.timestamp;
-        });
+        }).length === 1;
 
-        // var index, buzzExistInResponse = false;
-        // for(index = 0; res.body.length > index; index++) {
-        //   if () {
-        //
-        //   }
-        // }
-
-        console.log(buzzExistInResponse);
-
-        assert.equal(buzzExistInResponse);
+        assert(buzzExistInResponse);
 
         done();
       });
