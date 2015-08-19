@@ -2,9 +2,9 @@ var express     = require('express');
 var compression = require('compression');
 var bodyParser  = require('body-parser');
 
-var simpleAuth          = require('./simple-auth');
-var buzzesRepository    = require('./buzzes-repository')();
-var cors                = require('./cors');
+var simpleAuth          = require('./lib/simple-auth');
+var buzzesRepository    = require('./lib/buzzes-repository')();
+var cors                = require('./lib/cors');
 
 var app = express();
 
