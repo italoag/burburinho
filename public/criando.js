@@ -1,3 +1,4 @@
+/* global $, alert, moment */
 $(function() {
   var buzzs = [];
   var galleryListItems = [];
@@ -14,7 +15,7 @@ $(function() {
     var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     var match = url.match(regExp);
 
-    if (match && match[2].length == 11) {
+    if (match && match[2].length === 11) {
       return match[2];
     }else{
       alert('Url incorreta');
@@ -43,15 +44,15 @@ $(function() {
     };
 
     if( type === 'video' ){
-      buzz['url'] = '//www.youtube.com/embed/'+getYoutubeId(video);
+      buzz.url = '//www.youtube.com/embed/' + getYoutubeId(video);
     }else if( type === 'photo' ||  type === 'quote'){
-      buzz['url'] = photo;
+      buzz.url = photo;
     } else if (type === 'gallery') {
-      buzz['content'] = galleryListItems;
+      buzz.content = galleryListItems;
     }
 
     if(content !== ''){
-      buzz['content'] = content;
+      buzz.content = content;
     }
 
     buzzs.push(buzz);
@@ -79,7 +80,9 @@ $(function() {
   function createAlertMessage(message) {
     $('.list-messages').html('').html(
       '<div class="alert alert-success" role="alert">' +
-        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+          '<span aria-hidden="true">&times;</span>' +
+        '</button>' +
         message +
       '</div>');
     setTimeout(function(){
@@ -103,7 +106,6 @@ $(function() {
 
     var list = $('aside .list-buzz');
     var div = $('<div/>', { class: 'buzz', id:buzz.id, 'data-buzz': JSON.stringify(buzz) });
-    var galleryContentItems;
 
     if($('.to-remove')[0]) {
       $('.to-remove').remove();
@@ -120,7 +122,8 @@ $(function() {
           '<td>' + galleryContentItems.html() + '</td>' +
           '<td>' + buzz.local + '</td>' +
           '<td>' +
-              '<button data-buzz-id="' + (buzzs.length - 1) + '" type="button" class="btn btn-outlined btn-theme btn-lg send-message" >Enviar</button>' +
+              '<button data-buzz-id="' + (buzzs.length - 1) +
+              '" type="button" class="btn btn-outlined btn-theme btn-lg send-message" >Enviar</button>' +
           '</td>' +
         '</tr>'
     );
@@ -186,7 +189,7 @@ $(function() {
     },
     onSuccess:function(files,data,xhr,pd)
     {
-      var url = data['link'];
+      var url = data.link;
 
       $('img.preview').attr('src', url);
       $('input.element.photo').val(url);
@@ -210,10 +213,10 @@ $(function() {
     onSuccess:function(files, data, xhr, pd)
     {
       galleryListItems.push({
-        url: data['link' ],
+        url: data.link,
         description: 'This is a test'
       });
-      var newImage = '<img class="element photo preview" src="' + data['link' ]+ '"/>';
+      var newImage = '<img class="element photo preview" src="' + data.link + '"/>';
       $('.multiple-image').prepend(newImage);
     },
   });
