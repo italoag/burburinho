@@ -16,28 +16,28 @@ describe('Buzzes:', function() {
     done();
   });
 
-  it('UNAUTHENTICATED POST: /api/burburinhos', function(done){
-    api.post('/api/burburinhos')
+  it('UNAUTHENTICATED POST: /api/buzzes', function(done){
+    api.post('/api/buzzes')
       .send(buzz)
       .expect(401, done);
   });
 
-  it('POST: /api/burburinhos', function(done){
-    api.post('/api/burburinhos')
+  it('POST: /api/buzzes', function(done){
+    api.post('/api/buzzes')
       .auth(process.env.API_USERNAME, process.env.API_PASSWORD)
       .send(buzz)
       .expect(201, done);
   });
 
-  it('GET: /api/burburinhos', function(done){
+  it('GET: /api/buzzes', function(done){
 
 
-    api.post('/api/burburinhos')
+    api.post('/api/buzzes')
       .auth(process.env.API_USERNAME, process.env.API_PASSWORD)
       .send(buzz)
       .expect(201);
 
-    api.get('/api/burburinhos')
+    api.get('/api/buzzes')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {

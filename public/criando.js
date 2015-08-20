@@ -26,7 +26,7 @@ $(function() {
     if (buzz.type === 'gallery') {
       buzz.content = JSON.parse(buzz.content);
     }
-    $.post( '/api/burburinhos', buzz);
+    $.post( '/api/buzzes', buzz);
   }
 
   function addBuzz(){
