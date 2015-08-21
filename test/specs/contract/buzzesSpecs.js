@@ -24,16 +24,15 @@ describe('Buzzes:', function() {
 
   it('POST: /api/buzzes', function(done){
     api.post('/api/buzzes')
-      .auth(process.env.API_USERNAME, process.env.API_PASSWORD)
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .send(buzz)
       .expect(201, done);
   });
 
   it('GET: /api/buzzes', function(done){
 
-
     api.post('/api/buzzes')
-      .auth(process.env.API_USERNAME, process.env.API_PASSWORD)
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .send(buzz)
       .expect(201);
 
