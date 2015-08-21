@@ -27,7 +27,11 @@ describe('Drafts:', function() {
     api.post('/api/drafts')
       .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
       .send(buzzDraft)
-      .expect(201, done);
+      .expect(201)
+      .end(function(err, res) {
+        assert(typeof res.body.id !== 'undefined');
+        done();
+      });
   });
 
   it('GET: /api/drafts', function(done){
@@ -64,4 +68,21 @@ describe('Drafts:', function() {
         done();
       });
   });
+
+  it('UNAUTHENTICATED DELETE: /api/drafts/<id>', function(done){
+    api.delete('/api/drafts/someid')
+      .expect(401, done);
+  });
+
+//    api.delete('/api/drafts/' + draftId)
+//      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_USERNAME)
+//      .expect(200);
+//      .end(function(err, res) {
+//
+//        if (err) {
+//          return done(err);
+//        }
+//
+//        done();
+//      });
 });
