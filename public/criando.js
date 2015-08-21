@@ -1,5 +1,6 @@
 /* global $, alert, moment */
 var buzzs = [];
+var drafts = [];
 var galleryListItems = [];
 var typeAndInputs = {
     'text': ['.local','.text'],
@@ -123,7 +124,7 @@ function updateBuzzList(buzz){
             '<td>' + buzz.local + '</td>' +
             '<td>' +
             '<button data-buzz-id="' + (buzzs.length - 1) +
-            '" type="button" class="btn btn-outlined btn-theme btn-lg send-message" >Enviar</button>' +
+            '" type="button" class="btn btn-outlined btn-theme btn-lg publish-message" >Publicar</button>' +
             '</td>' +
             '</tr>'
             );
@@ -132,13 +133,24 @@ function updateBuzzList(buzz){
     createAlertMessage('Conteúdo inserido na lista de rascunhos e aguardando confirmação de envio');
 }
 
-$('body').on('click', '.send-message', function() {
+$('body').on('click', '.publish-message', function() {
     var buzzId = $(this).data('buzz-id');
     sendMessage(buzzs[buzzId]);
     $('button[data-buzz-id="' + buzzId + '"]').parents('tr').remove();
-    if ( !$('table tbody tr')[0]) {
-        $('table tbody').append('<tr class="to-remove">' +
+    if ( !$('.publish-list tbody tr')[0]) {
+        $('.publish-list tbody').append('<tr class="to-remove">' +
             '<td colspan="5">Nenhum burburinho cadastrado</th>' +
+            '</tr>');
+    }
+    createAlertMessage('Conteúdo enviado para a timeline');
+})
+.on('click', '.publish-draft-message', function() {
+    var draftId = $(this).data('draft-id');
+    sendMessage(drafts[draftId]);
+    $('button[data-draft-id="' + draftId + '"]').parents('tr').remove();
+    if ( !$('.draft-list tbody tr')[0]) {
+        $('.draft-list tbody').append('<tr class="to-remove">' +
+            '<td colspan="5">Nenhum rascunho cadastrado</th>' +
             '</tr>');
     }
     createAlertMessage('Conteúdo enviado para a timeline');
@@ -190,7 +202,7 @@ $('div.element.photo').uploadFile({
 	    onSuccess:function(files,data,xhr,pd)
 	    {
 	        var url = data.link;
-	
+
 	        $('img.preview').attr('src', url);
 	        $('input.element.photo').val(url);
 	    },
@@ -222,3 +234,62 @@ $('div.element.photo').uploadFile({
     });
 
 $('.type, .multiple-image').hide();
+
+function getSocketIOUrl(){
+  return window.location.origin.indexOf('localhost') === -1 ?
+          '//burburinho.herokuapp.com' :
+          '//localhost:5000';
+}
+
+function updateDraftList(buzz){
+
+    if (buzz.type === 'gallery') {
+        var jsonContent = [];
+        var galleryContentItems = $('<ul>' + buzz.content.map(function(item) {
+            jsonContent.push('{"url": "' + item.url + '", "description": "' + item.description + '"}');
+            return  '<li>' + item.url + '</li>';
+        }) + '</ul>');
+
+        buzz.content = '[' + jsonContent.join(',') + ']';
+    } else {
+        galleryContentItems = $('<p>'+buzz.content+'</p>');
+    }
+
+    var list = $('aside .list-buzz');
+    var div = $('<div/>', { class: 'buzz', id:buzz.id, 'data-buzz': JSON.stringify(buzz) });
+
+    if($('.draft-list .to-remove')[0]) {
+        $('.draft-list .to-remove').remove();
+    }
+
+    var date = buzz.timestamp.split(' ')[0].split('-', 3);
+    date.shift();
+    date.reverse();
+
+    $('table.draft-list tbody').append(
+      '<tr>' +
+      '<td>' + getLabelOfType(buzz.type) + '</td>' +
+      '<td>' + date.join('/') + '</td>' +
+      '<td>' + galleryContentItems.html() + '</td>' +
+      '<td>' + buzz.local + '</td>' +
+      '<td>' +
+      '<button data-draft-id="' + (drafts.length - 1) +
+      '" type="button" class="btn btn-outlined btn-theme btn-lg publish-draft-message" >Publicar</button>' +
+      '</td>' +
+      '</tr>'
+      );
+
+    list.append(div);
+    createAlertMessage('Rascunhos e aguardando confirmação de envio');
+}
+
+var addDraftOnList = function(data) {
+  var draft = data.message;
+  drafts.push(draft);
+  updateDraftList(draft);
+};
+
+if (typeof io !== 'undefined') {
+  var socket = io.connect(getSocketIOUrl());
+  socket.on('draft', addDraftOnList);
+}
