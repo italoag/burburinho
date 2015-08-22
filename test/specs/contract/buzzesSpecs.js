@@ -9,9 +9,10 @@ describe('Buzzes:', function() {
   before(function(done){
     require(CONFIG.ROOT_DIRECTORY + '/lib/server').startServer();
     buzz = {
-      type: 'text',
-      content: 'This is a test',
-      timestamp: new Date().getTime()
+    content: 'This is a test',
+      local: 'São Paulo (SP)',
+      timestamp: CONFIG.FORMATTED_TIMESTAMP,
+      type: 'text'
     };
     done();
   });
@@ -26,7 +27,11 @@ describe('Buzzes:', function() {
     api.post('/api/buzzes')
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .send(buzz)
-      .expect(201, done);
+      .expect(201)
+      .end(function(err, res) {
+        assert(typeof res.body.id !== 'undefined');
+        done();
+      });
   });
 
   it('GET: /api/buzzes', function(done){

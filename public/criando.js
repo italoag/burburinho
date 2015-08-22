@@ -146,14 +146,24 @@ $('body').on('click', '.publish-message', function() {
 })
 .on('click', '.publish-draft-message', function() {
     var draftId = $(this).data('draft-id');
-    sendMessage(drafts[draftId]);
-    $('button[data-draft-id="' + draftId + '"]').parents('tr').remove();
-    if ( !$('.draft-list tbody tr')[0]) {
-        $('.draft-list tbody').append('<tr class="to-remove">' +
-            '<td colspan="5">Nenhum rascunho cadastrado</th>' +
-            '</tr>');
-    }
-    createAlertMessage('Conteúdo enviado para a timeline');
+    var draft = drafts[draftId];
+
+    console.log(draft);
+    $.ajax({
+      url: '/api/drafts/' + draft._id,
+      type: 'DELETE',
+      success: function(result) {
+        sendMessage(draft);
+        $('button[data-draft-id="' + draftId + '"]').parents('tr').remove();
+        if ( !$('.draft-list tbody tr')[0]) {
+            $('.draft-list tbody').append('<tr class="to-remove">' +
+                '<td colspan="5">Nenhum rascunho cadastrado</th>' +
+                '</tr>');
+        }
+        createAlertMessage('Conteúdo enviado para a timeline');
+
+      }
+    });
 });
 
 $('#type').on('change', function(e){

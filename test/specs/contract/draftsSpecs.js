@@ -9,10 +9,10 @@ describe('Drafts:', function() {
   before(function(done){
     require(CONFIG.ROOT_DIRECTORY + '/lib/server').startServer();
     buzzDraft = {
-      type: 'text',
-      content: 'This is a test',
-      timestamp: new Date().getTime(),
-      author: 'John Doe'
+    content: 'This is a test',
+      local: 'São Paulo (SP)',
+      timestamp: CONFIG.FORMATTED_TIMESTAMP,
+      type: 'text'
     };
     done();
   });
@@ -74,15 +74,24 @@ describe('Drafts:', function() {
       .expect(401, done);
   });
 
-//    api.delete('/api/drafts/' + draftId)
-//      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_USERNAME)
-//      .expect(200);
-//      .end(function(err, res) {
-//
-//        if (err) {
-//          return done(err);
-//        }
-//
-//        done();
-//      });
+  it('DELETE: /api/drafts/<id>', function(done){
+
+    api.post('/api/drafts')
+      .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
+      .send(buzzDraft)
+      .expect(201)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        var draftId = res.body.id;
+
+        api.delete('/api/drafts/' + draftId)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_USERNAME)
+          .expect(200);
+
+          done();
+      });
+  });
 });
