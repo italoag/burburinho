@@ -302,4 +302,16 @@ var addDraftOnList = function(data) {
 if (typeof io !== 'undefined') {
   var socket = io.connect(getSocketIOUrl());
   socket.on('draft', addDraftOnList);
+
+  $(window).load(function(){
+    $.getJSON('/api/drafts', function(drafts) {
+      if (drafts.length <= 0) {
+        return;
+      }
+
+      $.each(drafts, function(index, draft) {
+        addDraftOnList({message: draft});
+      });
+    })
+  });
 }
