@@ -91,7 +91,49 @@ describe('Drafts:', function() {
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_USERNAME)
           .expect(200);
 
-          done();
+        done();
+      });
+  });
+
+  it('UNAUTHENTICATED PUT: /api/drafts/<id>', function(done){
+    api.post('/api/drafts')
+      .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
+      .send(buzzDraft)
+      .expect(201)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        var draftId = res.body.id;
+
+        api.put('/api/drafts/' + draftId)
+          .send(buzzDraft)
+          .expect(401);
+
+        done();
+      });
+  });
+
+  it('PUT: /api/drafts/<id>', function(done){
+
+    api.post('/api/drafts')
+      .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
+      .send(buzzDraft)
+      .expect(201)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        var draftId = res.body.id;
+
+        api.put('/api/drafts/' + draftId)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .send(buzzDraft)
+          .expect(204);
+
+        done();
       });
   });
 });
