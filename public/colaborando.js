@@ -5,12 +5,13 @@
       buzz.content = JSON.parse(buzz.content);
     }
     $.post( '/api/drafts', buzz, function(){
-      createAlertMessage('Sugestão enviada para redator');   
+      createAlertMessage('Sugestão enviada para redator');
     });
   }
 
   function addBuzz(){
     var local     = $('input.local').val();
+    var author     = $('input.author').val();
     var timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
     var content   = $('textarea.text').val();
     var video      = $('input.video').val();
@@ -20,6 +21,7 @@
     var buzz = {
       local: local,
       timestamp: timestamp,
+      author: author,
       type: type
     };
 
@@ -40,4 +42,3 @@
     $('input.local, textarea.text, input.video, input.photo').val('');
     $('.element.photo.preview').attr('src', 'http://farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg');
   }
-

@@ -299,6 +299,11 @@ $('#type').on('change', function(e){
         }
 
         $('.type').show();
+
+        if ($('.author')[0]) {
+          $('.author').show();
+        }
+
     }
 });
 
@@ -387,7 +392,8 @@ function updateDraftList(buzz, showMessage, index){
 
     var elementString = '.draft-list tbody';
 
-    var template = '<td>' + getLabelOfType(buzz.type) + '</td>' +
+    var template = '<td>' + buzz.author + '</td>' +
+      '<td>' + getLabelOfType(buzz.type) + '</td>' +
       '<td>' + date.join('/') + '</td>' +
       '<td>' + galleryContentItems.html() + '</td>' +
       '<td>' + buzz.local + '</td>' +
