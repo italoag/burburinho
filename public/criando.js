@@ -1,5 +1,7 @@
 /* global $, alert, moment */
 var buzzs = [];
+var itemEditIndex = 0;
+var itemEditIsDraft = false;
 var drafts = [];
 var galleryListItems = [];
 var typeAndInputs = {
@@ -57,10 +59,13 @@ function addBuzz(){
 
     buzzs.push(buzz);
     updateBuzzList(buzz);
+    resetForm();
+}
 
-    $('input.local, textarea.text, input.video, input.photo').val('');
-    $('#type').trigger('change');
-    $('.element.photo.preview').attr('src', 'http://farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg');
+function resetForm() {
+  $('input.local, textarea.text, input.video, input.photo').val('');
+  $('#type').trigger('change');
+  $('.element.photo.preview').attr('src', 'http://farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg');
 }
 
 function getLabelOfType(type){
@@ -91,7 +96,38 @@ function createAlertMessage(message) {
     }, 5000);
 }
 
-function updateBuzzList(buzz){
+function createItemValueObject() {
+
+  var local       = $('input[name="local"]').val();
+  var timestamp   = moment().format('YYYY-MM-DD HH:mm:ss');
+  var content     = $('textarea[name="texto"]').val();
+  var video       = $('input.video').val();
+  var photo       = $('input.photo').val();
+  var type        = $('#type').val();
+  var id          = (new Date()).getTime();
+
+  var buzz = {
+      local: local,
+      timestamp: timestamp,
+      type: type
+  };
+
+  if( type === 'video' ){
+      buzz.url = '//www.youtube.com/embed/' + getYoutubeId(video);
+  }else if( type === 'photo' ||  type === 'quote'){
+      buzz.url = photo;
+  } else if (type === 'gallery') {
+      buzz.content = galleryListItems;
+  }
+
+  if(content !== ''){
+      buzz.content = content;
+  }
+
+  return buzz;
+}
+
+function updateBuzzList(buzz, index){
 
     if (buzz.type === 'gallery') {
         var jsonContent = [];
@@ -116,21 +152,31 @@ function updateBuzzList(buzz){
     date.shift();
     date.reverse();
 
-    $('table tbody').append(
-            '<tr>' +
-            '<td>' + getLabelOfType(buzz.type) + '</td>' +
-            '<td>' + date.join('/') + '</td>' +
-            '<td>' + galleryContentItems.html() + '</td>' +
-            '<td>' + buzz.local + '</td>' +
-            '<td>' +
-            '<button data-buzz-id="' + (buzzs.length - 1) +
-            '" type="button" class="btn btn-outlined btn-theme btn-lg publish-message" >Publicar</button>' +
-            '</td>' +
-            '</tr>'
-            );
+    var elementString = '.publish-list tbody';
+
+    var template = '<td>' + getLabelOfType(buzz.type) + '</td>' +
+    '<td>' + date.join('/') + '</td>' +
+    '<td>' + galleryContentItems.html() + '</td>' +
+    '<td>' + buzz.local + '</td>' +
+    '<td>' +
+    '<button data-buzz-id="' + (buzzs.length - 1) +
+    '" type="button" class="btn btn-outlined btn-theme btn-lg publish-message" >Publicar</button>' +
+    '<button data-buzz-id="' + (buzzs.length - 1) +
+    '" type="button" class="btn btn-outlined btn-theme btn-lg edit-publish" >Editar</button>' +
+
+    '</td>';
+
+    if (!isNaN(index)) {
+      elementString += ' tr:eq(' + index + ')';
+    } else {
+      template = '<tr>' + template + '</tr>';
+    }
+
+    $(elementString)[!isNaN(index) ? 'html' : 'append'](template);
 
     list.append(div);
     createAlertMessage('Conteúdo inserido na lista de rascunhos e aguardando confirmação de envio');
+    resetForm();
 }
 
 $('body').on('click', '.publish-message', function() {
@@ -143,12 +189,75 @@ $('body').on('click', '.publish-message', function() {
             '</tr>');
     }
     createAlertMessage('Conteúdo enviado para a timeline');
+    resetForm();
+})
+.on('click', '.edit-publish', function(){
+
+    $('.go').addClass('is-hidden');
+
+    var buzzId = $(this).data('buzz-id');
+    itemEditIndex = buzzId;
+    var buzz = buzzs[buzzId];
+
+    $('.cancel, .edit').removeClass('is-hidden');
+    $('.publish-list tbody tr:eq(' + buzzId + ')').addClass('is-hidden');
+    $('#type option[value="' + buzz.type +'"]').attr('selected', true);
+
+    $('input[name="local"]').val(buzz.local);
+    $('textarea[name="texto"]').val(buzz.content);
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+})
+.on('click', '.edit-draft', function(){
+
+    $('.cancel, .edit').removeClass('is-hidden');
+    $('.go').addClass('is-hidden');
+
+    var draftId = $(this).data('draft-id');
+    itemEditIndex = draftId;
+    var draft = drafts[draftId];
+    itemEditIsDraft = true;
+
+    $('.draft-list tbody tr:eq(' + draftId + ')').addClass('is-hidden');
+    $('#type option[value="' + draft.type +'"]').attr('selected', true);
+    $('#type').trigger('change');
+    $('input[name="local"]').val(draft.local);
+    $('textarea[name="texto"]').val(draft.content);
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+})
+.on('click', '.cancel', function(){
+  $('.cancel, .edit').addClass('is-hidden');
+  $('.go').removeClass('is-hidden');
+  $('.draft-list tbody tr, .publish-list tbody tr')
+          .removeClass('is-hidden');
+
+  resetForm();
+  itemEditIndex = 0;
+  itemEditIsDraft = false;
+})
+.on('click', '.edit', function(){
+  $('.cancel, .edit').addClass('is-hidden');
+  $('.go').removeClass('is-hidden');
+  $('.draft-list tbody tr, .publish-list tbody tr')
+          .removeClass('is-hidden');
+
+  var newBuzz = createItemValueObject();
+  if(itemEditIsDraft) {
+    drafts[itemEditIndex] = newBuzz;
+    updateDraftList(newBuzz, true, itemEditIndex);
+  }  else {
+    buzzs[itemEditIndex] = newBuzz;
+    updateBuzzList(newBuzz, itemEditIndex);
+  }
+  $('.draft-list tbody tr, .publish-list tbody tr')
+          .removeClass('is-hidden');
+  itemEditIndex = 0;
+  itemEditIsDraft = false;
+  resetForm();
 })
 .on('click', '.publish-draft-message', function() {
     var draftId = $(this).data('draft-id');
     var draft = drafts[draftId];
 
-    console.log(draft);
     $.ajax({
       url: '/api/drafts/' + draft._id,
       type: 'DELETE',
@@ -251,7 +360,7 @@ function getSocketIOUrl(){
           '//localhost:5000';
 }
 
-function updateDraftList(buzz){
+function updateDraftList(buzz, showMessage, index){
 
     if (buzz.type === 'gallery') {
         var jsonContent = [];
@@ -276,27 +385,38 @@ function updateDraftList(buzz){
     date.shift();
     date.reverse();
 
-    $('table.draft-list tbody').append(
-      '<tr>' +
-      '<td>' + getLabelOfType(buzz.type) + '</td>' +
+    var elementString = '.draft-list tbody';
+
+    var template = '<td>' + getLabelOfType(buzz.type) + '</td>' +
       '<td>' + date.join('/') + '</td>' +
       '<td>' + galleryContentItems.html() + '</td>' +
       '<td>' + buzz.local + '</td>' +
       '<td>' +
       '<button data-draft-id="' + (drafts.length - 1) +
       '" type="button" class="btn btn-outlined btn-theme btn-lg publish-draft-message" >Publicar</button>' +
-      '</td>' +
-      '</tr>'
-      );
+      '<button data-draft-id="' + (drafts.length - 1) +
+      '" type="button" class="btn btn-outlined btn-theme btn-lg edit-draft" >Editar</button>' +
+      '</td>';
+
+    if (!isNaN(index)) {
+      elementString += ' tr:eq(' + index + ')';
+    } else {
+      template = '<tr>' + template + '</tr>';
+    }
+
+    $(elementString)[!isNaN(index) ? 'html' : 'append'](template);
 
     list.append(div);
-    createAlertMessage('Rascunhos e aguardando confirmação de envio');
+    if (!!showMessage) {
+      createAlertMessage('Rascunhos e aguardando confirmação de envio');
+    }
 }
 
-var addDraftOnList = function(data) {
+var addDraftOnList = function(data, showMessage) {
+  showMessage = typeof showMessage !== 'undefined' ? showMessage : true;
   var draft = data.message;
   drafts.push(draft);
-  updateDraftList(draft);
+  updateDraftList(draft, showMessage);
 };
 
 if (typeof io !== 'undefined') {
@@ -310,7 +430,7 @@ if (typeof io !== 'undefined') {
       }
 
       $.each(drafts, function(index, draft) {
-        addDraftOnList({message: draft});
+        addDraftOnList({message: draft}, false);
       });
     })
   });

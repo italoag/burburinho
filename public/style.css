@@ -2,7 +2,9 @@ img.preview{
   width: 100px;
   height: 100px;
 }
-
+.is-hidden {
+  visibility: hidden !important;
+}
 .btn-outlined.btn-theme {
   color: #FFF;
   background: #891A1C;
