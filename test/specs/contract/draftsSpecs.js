@@ -23,7 +23,25 @@ describe('Drafts:', function() {
       .expect(401, done);
   });
 
-  it('POST: /api/drafts', function(done){
+  it('WRONG CREDENTIALS POST: /api/drafts', function(done){
+    api.post('/api/drafts')
+      .auth('inexistent_user', 'inexistent_password')
+      .send(buzzDraft)
+      .expect(401, done);
+  });
+
+  it('EDITOR CREDENTIALS POST: /api/drafts', function(done){
+    api.post('/api/drafts')
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .send(buzzDraft)
+      .expect(201)
+      .end(function(err, res) {
+        assert(typeof res.body.id !== 'undefined');
+        done();
+      });
+  });
+
+  it('COLLABORATOR CREDENTIALS POST: /api/drafts', function(done){
     api.post('/api/drafts')
       .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
       .send(buzzDraft)
@@ -35,37 +53,38 @@ describe('Drafts:', function() {
   });
 
   it('GET: /api/drafts', function(done){
+    buzzDraft.local = 'MyLocal' + Math.random().toString(36).substring(7); 
 
     api.post('/api/drafts')
-      .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .send(buzzDraft)
-      .expect(201);
+      .expect(201)
+      .end(function() {
+          api.get('/api/drafts')
+            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function(err, res) {
+                if (err) {
+                    return done(err);
+                }
 
-    api.get('/api/drafts')
-      .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function(err, res) {
+                assert(res.body instanceof Array);
 
-        if (err) {
-          return done(err);
-        }
+                res.body.forEach(function (response) {
+                    assert.equal(typeof response.type !== 'undefined', true);
+                    assert.equal(typeof response.content !== 'undefined', true);
+                    assert.equal(typeof response.timestamp !== 'undefined', true);
+                });
 
-        assert(res.body instanceof Array);
+                var draftExistInResponse = res.body.filter(function(element){
+                    return element.local === buzzDraft.local;
+                }).length === 1;
 
-        res.body.forEach(function (response) {
-          assert.equal(typeof response.type !== 'undefined', true);
-          assert.equal(typeof response.content !== 'undefined', true);
-          assert.equal(typeof response.timestamp !== 'undefined', true);
-        });
+                assert(draftExistInResponse);
 
-        var draftExistInResponse = res.body.filter(function(element){
-          return element.timestamp === buzzDraft.timestamp;
-        }).length === 1;
-
-        assert(draftExistInResponse);
-
-        done();
+                done();
+            });
       });
   });
 
