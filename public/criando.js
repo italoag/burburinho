@@ -50,6 +50,13 @@ function updateDraft(draft) {
     });
 }
 
+function deleteDraft(draftId) {
+    return $.ajax({
+      url: '/api/drafts/' + draftId,
+      type: 'DELETE'
+    });
+}
+
 function addBuzz(){
     var local     = $('input.local').val();
     var timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -175,6 +182,31 @@ $('body').on('click', '.publish-message', function() {
     $('textarea[name="texto"]').val(buzz.content);
     $('html, body').animate({ scrollTop: 0 }, 'fast');
 })
+.on('click', '.delete-draft', function(){
+
+  if (confirm('Tem certeza de que quer remover este burburinho?')) {
+
+    $('.cancel, .edit').addClass('is-hidden');
+    $('.go').removeClass('is-hidden');
+    $('.draft-list tbody tr, .publish-list tbody tr')
+            .removeClass('is-hidden');
+
+    var draftId = $(this).data('draft-id');
+    deleteDraft(drafts[draftId]._id).then(function() {
+      drafts.splice(draftId, 1);
+
+      resetForm();
+      itemEditIndex = 0;
+      itemEditIsDraft = false;
+      $('.delete-draft[data-draft-id="' + draftId + '"]')
+              .parents('tr')
+              .remove();
+      createAlertMessage('Conteúdo removido da lista de rascunhos');
+    });
+  }
+
+})
+
 .on('click', '.edit-draft', function(){
 
     $('.cancel, .edit').removeClass('is-hidden');
@@ -369,6 +401,8 @@ function updateDraftList(buzz, showMessage, index){
       '" type="button" class="btn btn-outlined btn-theme btn-lg publish-draft-message" >Publicar</button>' +
       '<button data-draft-id="' + (drafts.length - 1) +
       '" type="button" class="btn btn-outlined btn-theme btn-lg edit-draft" >Editar</button>' +
+      '<button data-draft-id="' + (drafts.length - 1) +
+      '" type="button" class="btn btn-outlined btn-theme btn-lg delete-draft" >Remover</button>' +
       '</td>';
 
     if (!isNaN(index)) {

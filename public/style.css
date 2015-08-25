@@ -83,20 +83,21 @@ img.preview{
 }
 
 
-.edit-draft, .publish-draft-message {
-  width: 45%;
+.edit-draft, .publish-draft-message, .delete-draft {
+  width: 30%;
+  font-size: 11px !important;
 }
-.edit-draft {
+.edit-draft, .delete-draft {
   margin-left: 5%;
 }
 
 @media (max-width: 992px) {
-  .edit-draft, .publish-draft-message {
+  .edit-draft, .publish-draft-message, .delete-draft {
     width: 100% !important;
     margin-top: 10px !important;
   }
 
-  .edit-draft {
+  .edit-draft, .delete-draft {
     margin-left: 0;
   }
 }
