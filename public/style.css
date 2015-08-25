@@ -3,7 +3,8 @@ img.preview{
   height: 100px;
 }
 .is-hidden {
-  visibility: hidden !important;
+    display: none !important;
+    visibility: hidden !important;
 }
 .btn-outlined.btn-theme {
   color: #FFF;
@@ -76,4 +77,8 @@ img.preview{
   background-image: none;
   border: 1px solid transparent;
   border-radius: 4px;
+}
+
+.publish-draft-message {
+  margin-right: 10px;
 }
