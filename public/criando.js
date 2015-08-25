@@ -24,11 +24,30 @@ function getYoutubeId(url){
     }
 }
 
-function sendMessage (buzz) {
+function publishBuzz (buzz) {
     if (buzz.type === 'gallery') {
         buzz.content = JSON.parse(buzz.content);
     }
     $.post( '/api/buzzes', buzz);
+}
+
+function saveDraft(buzz) {
+    if (buzz.type === 'gallery') {
+        buzz.content = JSON.parse(buzz.content);
+    }
+    return $.post( '/api/drafts', buzz);
+}
+
+function updateDraft(draft) {
+    if (draft.type === 'gallery') {
+        draft.content = JSON.parse(draft.content);
+    }
+
+    return $.ajax({
+      url: '/api/drafts/' + draft._id,
+      type: 'PUT',
+      data: draft
+    });
 }
 
 function addBuzz(){
@@ -58,8 +77,11 @@ function addBuzz(){
     }
 
     buzzs.push(buzz);
-    updateBuzzList(buzz);
-    resetForm();
+    saveDraft(buzz).then(function(){
+        console.log('cheguei');
+        addDraftOnList(buzz);
+        resetForm();
+    });
 }
 
 function resetForm() {
@@ -127,61 +149,9 @@ function createItemValueObject() {
   return buzz;
 }
 
-function updateBuzzList(buzz, index){
-
-    if (buzz.type === 'gallery') {
-        var jsonContent = [];
-        var galleryContentItems = $('<ul>' + buzz.content.map(function(item) {
-            jsonContent.push('{"url": "' + item.url + '", "description": "' + item.description + '"}');
-            return  '<li>' + item.url + '</li>';
-        }) + '</ul>');
-
-        buzz.content = '[' + jsonContent.join(',') + ']';
-    } else {
-        galleryContentItems = $('<p>'+buzz.content+'</p>');
-    }
-
-    var list = $('aside .list-buzz');
-    var div = $('<div/>', { class: 'buzz', id:buzz.id, 'data-buzz': JSON.stringify(buzz) });
-
-    if($('.to-remove')[0]) {
-        $('.to-remove').remove();
-    }
-
-    var date = buzz.timestamp.split(' ')[0].split('-', 3);
-    date.shift();
-    date.reverse();
-
-    var elementString = '.publish-list tbody';
-
-    var template = '<td>' + getLabelOfType(buzz.type) + '</td>' +
-    '<td>' + date.join('/') + '</td>' +
-    '<td>' + galleryContentItems.html() + '</td>' +
-    '<td>' + buzz.local + '</td>' +
-    '<td>' +
-    '<button data-buzz-id="' + (buzzs.length - 1) +
-    '" type="button" class="btn btn-outlined btn-theme btn-lg publish-message" >Publicar</button>' +
-    '<button data-buzz-id="' + (buzzs.length - 1) +
-    '" type="button" class="btn btn-outlined btn-theme btn-lg edit-publish" >Editar</button>' +
-
-    '</td>';
-
-    if (!isNaN(index)) {
-      elementString += ' tr:eq(' + index + ')';
-    } else {
-      template = '<tr>' + template + '</tr>';
-    }
-
-    $(elementString)[!isNaN(index) ? 'html' : 'append'](template);
-
-    list.append(div);
-    createAlertMessage('Conteúdo inserido na lista de rascunhos e aguardando confirmação de envio');
-    resetForm();
-}
-
 $('body').on('click', '.publish-message', function() {
     var buzzId = $(this).data('buzz-id');
-    sendMessage(buzzs[buzzId]);
+    publishBuzz(buzzs[buzzId]);
     $('button[data-buzz-id="' + buzzId + '"]').parents('tr').remove();
     if ( !$('.publish-list tbody tr')[0]) {
         $('.publish-list tbody').append('<tr class="to-remove">' +
@@ -240,19 +210,20 @@ $('body').on('click', '.publish-message', function() {
   $('.draft-list tbody tr, .publish-list tbody tr')
           .removeClass('is-hidden');
 
-  var newBuzz = createItemValueObject();
-  if(itemEditIsDraft) {
-    drafts[itemEditIndex] = newBuzz;
-    updateDraftList(newBuzz, true, itemEditIndex);
-  }  else {
-    buzzs[itemEditIndex] = newBuzz;
-    updateBuzzList(newBuzz, itemEditIndex);
-  }
-  $('.draft-list tbody tr, .publish-list tbody tr')
+  var draft = createItemValueObject();
+  var oldDraft = drafts[itemEditIndex];
+  draft._id = oldDraft._id;
+
+  updateDraft(draft).then(function(){
+      console.log(draft);
+    updateDraftList(draft, true, itemEditIndex);
+
+    $('.draft-list tbody tr, .publish-list tbody tr')
           .removeClass('is-hidden');
-  itemEditIndex = 0;
-  itemEditIsDraft = false;
-  resetForm();
+    itemEditIndex = 0;
+    itemEditIsDraft = false;
+    resetForm();
+  });
 })
 .on('click', '.publish-draft-message', function() {
     var draftId = $(this).data('draft-id');
@@ -262,7 +233,7 @@ $('body').on('click', '.publish-message', function() {
       url: '/api/drafts/' + draft._id,
       type: 'DELETE',
       success: function(result) {
-        sendMessage(draft);
+        publishBuzz(draft);
         $('button[data-draft-id="' + draftId + '"]').parents('tr').remove();
         if ( !$('.draft-list tbody tr')[0]) {
             $('.draft-list tbody').append('<tr class="to-remove">' +
@@ -270,7 +241,6 @@ $('body').on('click', '.publish-message', function() {
                 '</tr>');
         }
         createAlertMessage('Conteúdo enviado para a timeline');
-
       }
     });
 });
