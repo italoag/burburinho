@@ -78,9 +78,7 @@ function addBuzz(){
 
     buzzs.push(buzz);
     saveDraft(buzz).then(function(){
-        console.log('cheguei');
-        addDraftOnList(buzz);
-        resetForm();
+      resetForm();
     });
 }
 
@@ -215,7 +213,6 @@ $('body').on('click', '.publish-message', function() {
   draft._id = oldDraft._id;
 
   updateDraft(draft).then(function(){
-      console.log(draft);
     updateDraftList(draft, true, itemEditIndex);
 
     $('.draft-list tbody tr, .publish-list tbody tr')
@@ -390,7 +387,7 @@ function updateDraftList(buzz, showMessage, index){
 
 var addDraftOnList = function(data, showMessage) {
   showMessage = typeof showMessage !== 'undefined' ? showMessage : true;
-  var draft = data.message;
+  var draft = typeof data.message !== 'undefined' ? data.message : data;
   drafts.push(draft);
   updateDraftList(draft, showMessage);
 };
@@ -400,6 +397,12 @@ if (typeof io !== 'undefined') {
   socket.on('draft', addDraftOnList);
 
   $(window).load(function(){
+
+    if( $(window).width() < 768 ) {
+      $('input.form-control, select.form-control, textarea.form-control').addClass('input-lg');
+      $('.go').addClass('btn-lg btn-block');
+    }
+
     $.getJSON('/api/drafts', function(drafts) {
       if (drafts.length <= 0) {
         return;
