@@ -147,12 +147,34 @@ describe('Drafts:', function() {
 
         var draftId = res.body.id;
 
+        buzzDraft.local = 'MyLocal' + Math.random().toString(36).substring(7); 
         api.put('/api/drafts/' + draftId)
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
           .send(buzzDraft)
-          .expect(204);
+          .expect(204)
+          .end(function(err, res) {
+            if(err) {
+              return done(err);
+            }
 
-        done();
-      });
+            api.get('/api/drafts')
+                .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    var modifiedDraftExistInResponse = res.body.filter(function(element){
+                        return element.local === buzzDraft.local;
+                    }).length;
+
+                    assert.equal(modifiedDraftExistInResponse, 1);
+
+                    done();
+                });
+            });
+    });
   });
 });
