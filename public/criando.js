@@ -401,6 +401,7 @@ if (typeof io !== 'undefined') {
     if( $(window).width() < 768 ) {
       $('input.form-control, select.form-control, textarea.form-control').addClass('input-lg');
       $('.go').addClass('btn-lg btn-block');
+      $('#type option[value="video"]').remove();
     }
 
     $.getJSON('/api/drafts', function(drafts) {
