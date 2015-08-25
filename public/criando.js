@@ -68,6 +68,7 @@ function addBuzz(){
     var buzz = {
         local: local,
         timestamp: timestamp,
+        author: 'Redator',
         type: type
     };
 
@@ -243,6 +244,7 @@ $('body').on('click', '.publish-message', function() {
   var draft = createItemValueObject();
   var oldDraft = drafts[itemEditIndex];
   draft._id = oldDraft._id;
+  draft.author = oldDraft.author;
 
   updateDraft(draft).then(function(){
     updateDraftList(draft, true, itemEditIndex);
