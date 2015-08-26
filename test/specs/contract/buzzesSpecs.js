@@ -67,4 +67,69 @@ describe('Buzzes:', function() {
         done();
       });
   });
+
+  it('UNAUTHENTICATED PUT: /api/buzzes/<id>', function(done){
+    api.post('/api/buzzes')
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .send(buzz)
+      .expect(201)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        var buzzId = res.body.id;
+
+        api.put('/api/buzzes/' + buzzId)
+          .send(buzz)
+          .expect(401);
+
+        done();
+      });
+  });
+
+  it('PUT: /api/buzzes/<id>', function(done){
+
+    api.post('/api/buzzes')
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .send(buzz)
+      .expect(201)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        var buzzId = res.body.id;
+
+        buzz.local = 'MyLocal' + Math.random().toString(36).substring(7);
+        api.put('/api/buzzes/' + buzzId)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .send(buzz)
+          .expect(204)
+          .end(function(err, res) {
+            if(err) {
+              return done(err);
+            }
+
+            api.get('/api/buzzes')
+              .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+              .expect(200)
+              .expect('Content-Type', /json/)
+              .end(function(err, res) {
+                  if (err) {
+                      return done(err);
+                  }
+
+                  var modifiedDraftExistInResponse = res.body.filter(function(element){
+                      return element.local === buzz.local;
+                  }).length;
+
+                  assert.equal(modifiedDraftExistInResponse, 1);
+
+                  done();
+              });
+          });
+    });
+  });
+
 });
