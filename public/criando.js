@@ -28,7 +28,7 @@ function publishBuzz (buzz) {
     if (buzz.type === 'gallery') {
         buzz.content = JSON.parse(buzz.content);
     }
-    $.post( '/api/buzzes', buzz);
+    return $.post( '/api/buzzes', buzz);
 }
 
 function saveDraft(buzz) {
@@ -157,15 +157,17 @@ function createItemValueObject() {
 
 $('body').on('click', '.publish-message', function() {
     var buzzId = $(this).data('buzz-id');
-    publishBuzz(buzzs[buzzId]);
-    $('button[data-buzz-id="' + buzzId + '"]').parents('tr').remove();
-    if ( !$('.publish-list tbody tr')[0]) {
-        $('.publish-list tbody').append('<tr class="to-remove">' +
-            '<td colspan="5">Nenhum burburinho cadastrado</th>' +
-            '</tr>');
-    }
-    createAlertMessage('Conteúdo enviado para a timeline');
-    resetForm();
+    publishBuzz(buzzs[buzzId]).then(function(){
+      $('button[data-buzz-id="' + buzzId + '"]').parents('tr').remove();
+      if ( !$('.publish-list tbody tr')[0]) {
+          $('.publish-list tbody').append('<tr class="to-remove">' +
+              '<td colspan="6">Nenhum burburinho cadastrado</th>' +
+              '</tr>');
+      }
+      createAlertMessage('Conteúdo enviado para a timeline');
+      resetForm();
+
+    });
 })
 .on('click', '.edit-publish', function(){
 
@@ -251,6 +253,8 @@ $('body').on('click', '.publish-message', function() {
 
     $('.draft-list tbody tr, .publish-list tbody tr')
           .removeClass('is-hidden');
+
+    drafts[itemEditIndex] = draft;
     itemEditIndex = 0;
     itemEditIsDraft = false;
     resetForm();
@@ -259,19 +263,20 @@ $('body').on('click', '.publish-message', function() {
 .on('click', '.publish-draft-message', function() {
     var draftId = $(this).data('draft-id');
     var draft = drafts[draftId];
-
     $.ajax({
       url: '/api/drafts/' + draft._id,
       type: 'DELETE',
       success: function(result) {
-        publishBuzz(draft);
-        $('button[data-draft-id="' + draftId + '"]').parents('tr').remove();
-        if ( !$('.draft-list tbody tr')[0]) {
-            $('.draft-list tbody').append('<tr class="to-remove">' +
-                '<td colspan="5">Nenhum rascunho cadastrado</th>' +
-                '</tr>');
-        }
-        createAlertMessage('Conteúdo enviado para a timeline');
+        publishBuzz(draft).then(function(){
+          $('button[data-draft-id="' + draftId + '"]').delay(800).parents('tr').remove();
+          if ( !$('.draft-list tbody tr')[0]) {
+              $('.draft-list tbody').append('<tr class="to-remove">' +
+                  '<td colspan="6">Nenhum rascunho cadastrado</th>' +
+                  '</tr>');
+          }
+          createAlertMessage('Conteúdo enviado para a timeline');
+
+        });
       }
     });
 });
