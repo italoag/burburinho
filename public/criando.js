@@ -142,7 +142,7 @@ function createItemValueObject() {
 
   if( type === 'video' ){
       buzz.url = '//www.youtube.com/embed/' + getYoutubeId(video);
-  }else if( type === 'photo' ||  type === 'quote'){
+  }else if( $.inArray(type, ['photo', 'quote']) !== -1){
       buzz.url = photo;
   } else if (type === 'gallery') {
       buzz.content = galleryListItems;
@@ -183,6 +183,12 @@ $('body').on('click', '.publish-message', function() {
 
     $('input[name="local"]').val(buzz.local);
     $('textarea[name="texto"]').val(buzz.content);
+
+    if ($.inArray(type, ['photo', 'quote']) !== -1) {
+      $('img.preview').attr('src', buzz.url);
+      $('input.element.photo').val(buzz.url);
+    }
+
     $('html, body').animate({ scrollTop: 0 }, 'fast');
 })
 .on('click', '.delete-draft', function(){
