@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Editor - Burburinho</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link href="http://hayageek.github.io/jQuery-Upload-File/4.0.2/uploadfile.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="list-messages"></div>
+    <form class="form-horizontal">
+      <fieldset>
+
+        <div class="type">
+
+          <!-- Form Name -->
+          <legend>Burburinho</legend>
+
+          <!-- Select Basic -->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="categoria">Tipo</label>
+            <div class="col-md-5">
+              <select id="type" name="type" class="form-control">
+                <option value="">-- Selecione ---</option>
+                <option value="text">Texto</option>
+                <option value="video">Video</option>
+                <option value="quote">Aspas</option>
+                <option value="photo">Foto comentada</option>
+                <!-- <option value="gallery">Galleria de imagens</option> -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="local">Local</label>
+            <div class="col-md-5">
+              <input id="local" class="form-control input-md element local" name="local" type="text" placeholder="Insira o local do burburinho" required="">
+            </div>
+          </div>
+
+          <!-- Textarea -->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="texto">Texto</label>
+            <div class="col-md-4">
+              <textarea class="form-control element text" id="texto" name="texto"></textarea>
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label element video" for="video">Vídeo</label>
+            <div class="col-md-5">
+              <input id="video" class="element video form-control input-md" name="video" type="text" placeholder="Insira o link do vídeo">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-md-4 control-label element photo" for="text">Imagem:</label>
+            <div class="single-image">
+              <div class="col-md-5">
+                <img class="element photo preview" data-src="http://farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg"/>
+                <input type="hidden" class="element photo" />
+                <div class="element photo">Subir imagem</div>
+              </div>
+            </div>
+            <div class="multiple-image">
+              <div class="col-md-5">
+                <div class="element photos multiple">Subir imagem</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-5 col-md-5 col-md-offset-4">
+              <button type="button" class="btn btn-outlined btn-theme btn-lg go">ADICIONAR</button>
+              <button type="button" class="is-hidden btn btn-outlined btn-theme btn-lg edit">SALVAR</button>
+              <button type="button" class="is-hidden btn btn-outlined btn-theme btn-lg cancel">CANCELAR</button>
+            </div>
+          </div>
+
+        </div>
+      </fieldset>
+    </form>
+
+    <aside>
+      <h2>Publicados</h2>
+      <table class="draft-list table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Autor</th>
+            <th>Tipo</th>
+            <th>Data</th>
+            <th>Texto</th>
+            <th>Local</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="to-remove">
+            <td colspan="6">Nenhum rascunho cadastrado</th>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="list-buzz"></div>
+    </aside>
+
+  </div>
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="//cdn.socket.io/socket.io-1.3.5.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+  <script src="//hayageek.github.io/jQuery-Upload-File/4.0.2/jquery.uploadfile.min.js"></script>
+  <script src="/editando-publicacoes.js"></script>
+</body>
+</html>

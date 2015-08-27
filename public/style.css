@@ -90,6 +90,10 @@ img.preview{
 .edit-draft, .delete-draft {
   margin-left: 5%;
 }
+.edit-published {
+  width: 100% !important;
+  margin-top: 10px !important;
+}
 
 @media (max-width: 992px) {
   .edit-draft, .publish-draft-message, .delete-draft {
