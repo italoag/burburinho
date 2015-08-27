@@ -11,6 +11,7 @@ describe('Buzzes:', function() {
     buzz = {
     content: 'This is a test',
       local: 'São Paulo (SP)',
+      author: 'test',
       timestamp: CONFIG.FORMATTED_TIMESTAMP,
       type: 'text'
     };
@@ -56,6 +57,7 @@ describe('Buzzes:', function() {
           assert.equal(typeof response.type !== 'undefined', true);
           assert.equal(typeof response.content !== 'undefined', true);
           assert.equal(typeof response.timestamp !== 'undefined', true);
+          assert.equal(typeof response.author !== 'undefined', true);
         });
 
         var buzzExistInResponse = res.body.filter(function(element){

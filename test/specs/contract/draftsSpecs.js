@@ -11,6 +11,7 @@ describe('Drafts:', function() {
     buzzDraft = {
     content: 'This is a test',
       local: 'São Paulo (SP)',
+      author: 'test',
       timestamp: CONFIG.FORMATTED_TIMESTAMP,
       type: 'text'
     };
@@ -53,7 +54,7 @@ describe('Drafts:', function() {
   });
 
   it('GET: /api/drafts', function(done){
-    buzzDraft.local = 'MyLocal' + Math.random().toString(36).substring(7); 
+    buzzDraft.local = 'MyLocal' + Math.random().toString(36).substring(7);
 
     api.post('/api/drafts')
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
@@ -75,6 +76,7 @@ describe('Drafts:', function() {
                     assert.equal(typeof response.type !== 'undefined', true);
                     assert.equal(typeof response.content !== 'undefined', true);
                     assert.equal(typeof response.timestamp !== 'undefined', true);
+                    assert.equal(typeof response.author !== 'undefined', true);
                 });
 
                 var draftExistInResponse = res.body.filter(function(element){
@@ -147,7 +149,7 @@ describe('Drafts:', function() {
 
         var draftId = res.body.id;
 
-        buzzDraft.local = 'MyLocal' + Math.random().toString(36).substring(7); 
+        buzzDraft.local = 'MyLocal' + Math.random().toString(36).substring(7);
         api.put('/api/drafts/' + draftId)
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
           .send(buzzDraft)
