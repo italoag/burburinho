@@ -70,6 +70,32 @@ describe('Buzzes:', function() {
       });
   });
 
+  it('GET: /api/buzzes/<id>', function(done){
+
+    buzz.local = 'MyLocal' + Math.random().toString(36).substring(7);
+
+    api.post('/api/buzzes')
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .send(buzz)
+      .expect(201)
+      .end(function(err, res) {
+        if (err) {
+          return done(err);
+        }
+
+        var buzzId = res.body.id;
+
+        api.get('/api/buzzes/' + buzzId)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            assert.equal(res.body._id, buzzId);
+            done();
+          });
+      });
+
+  });
+
   it('UNAUTHENTICATED PUT: /api/buzzes/<id>', function(done){
     api.post('/api/buzzes')
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
