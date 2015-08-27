@@ -403,6 +403,7 @@ function updateDraftList(buzz, showMessage, index){
     date.reverse();
 
     var elementString = '.draft-list tbody';
+    var draftId = !isNaN(index) ? index : (drafts.length - 1);
 
     var template = '<td>' + buzz.author + '</td>' +
       '<td>' + getLabelOfType(buzz.type) + '</td>' +
@@ -410,11 +411,11 @@ function updateDraftList(buzz, showMessage, index){
       '<td>' + galleryContentItems.html() + '</td>' +
       '<td>' + buzz.local + '</td>' +
       '<td>' +
-      '<button data-draft-id="' + (drafts.length - 1) +
+      '<button data-draft-id="' + draftId +
       '" type="button" class="btn btn-outlined btn-theme btn-lg publish-draft-message" >Publicar</button>' +
-      '<button data-draft-id="' + (drafts.length - 1) +
+      '<button data-draft-id="' + draftId +
       '" type="button" class="btn btn-outlined btn-theme btn-lg edit-draft" >Editar</button>' +
-      '<button data-draft-id="' + (drafts.length - 1) +
+      '<button data-draft-id="' + draftId +
       '" type="button" class="btn btn-outlined btn-theme btn-lg delete-draft" >Remover</button>' +
       '</td>';
 
