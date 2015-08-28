@@ -105,3 +105,71 @@ img.preview{
     margin-left: 0;
   }
 }
+
+
+
+/*
+  MENU
+*/
+#menu {
+  position: absolute;
+  right: 20px;
+  height: 40px;
+  width: 40px;
+  margin: 10px;
+  cursor: pointer;
+}
+#menu:hover {
+  cursor: pointer;
+}
+#menu line {
+  stroke: #891A1C;
+  stroke-width: 5px;
+}
+.menu {
+  background-color: #891A1C;
+  height: 100%;
+  left: 0;
+  -ms-filter: none;
+  -webkit-filter: none;
+          filter: none;
+  opacity: .9;
+  overflow: auto;
+  padding-top: 25vh;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 3;
+}
+.menu.is-closed {
+  position: absolute;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.2s linear;
+}
+.menu-item a {
+  font-size: 2.8em;
+  line-height: 1.5em;
+  color: #fff;
+  text-decoration: none;
+}
+.menu-item a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+.btn-close, a.btn-close {
+    font-size: 4em;
+    line-height: 1em;
+    position: absolute;
+    right: 40px;
+    top: 0;
+    color: #fff;
+    cursor : pointer;
+}
+.btn-close:hover, a.btn-close:hover{
+    text-decoration: none;
+    color: #999;
+}
