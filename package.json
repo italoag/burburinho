@@ -20,11 +20,15 @@
     "start": "node index.js",
     "nodemon": "./node_modules/.bin/nodemon index.js  -e js,json",
     "test": "./node_modules/mocha/bin/mocha test/specs --recursive",
-    "jshint": "./node_modules/.bin/jshint ."
+    "jshint": "./node_modules/.bin/jshint .",
+    "protractor": "./node_modules/.bin/protractor protractor.conf.js",
+    "updateWebBrowser": "./node_modules/protractor/bin/webdriver-manager update",
+    "startWebBrowser": "./node_modules/protractor/bin/webdriver-manager start"
   },
   "devDependencies": {
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
+    "protractor": "^2.2.0",
     "supertest": "^1.0.1"
   }
 }
