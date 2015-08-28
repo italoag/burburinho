@@ -106,17 +106,28 @@ img.preview{
   }
 }
 
-
-
 /*
   MENU
 */
+nav{
+  height: 70px;
+  line-height: 70px;
+  border-bottom: 2px solid #eaeaea;
+  position: fixed;     right: 0;     left: 0;
+  background-color: #fff;
+  z-index: 1030;
+  vertical-align: baseline;
+}
+.logo-brand{
+  font-size: 25px;
+  font-weight: bold;
+}
 #menu {
-  position: absolute;
+  float: right;
   right: 20px;
   height: 40px;
   width: 40px;
-  margin: 10px;
+  margin-top: -55px;
   cursor: pointer;
 }
 #menu:hover {
@@ -164,7 +175,7 @@ img.preview{
     font-size: 4em;
     line-height: 1em;
     position: absolute;
-    right: 40px;
+    right: 70px;
     top: 0;
     color: #fff;
     cursor : pointer;
