@@ -42,9 +42,11 @@
     $('input.local, textarea.text, input.video, input.photo').val('');
     $('.element.photo.preview').attr('src', 'http://farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg');
   }
-  
-  if( $(window).width() < 768 ) {
-    $('input.form-control, select.form-control, textarea.form-control').addClass('input-lg');
-    $('.go').addClass('btn-lg btn-block');
-    $('#type option[value="video"]').remove();
-  }
+
+  $(window).load(function(){
+    if( $(window).width() < 768 ) {
+      $('input.form-control, select.form-control, textarea.form-control').addClass('input-lg');
+      $('.go').addClass('btn-lg btn-block');
+      $('#type option[value="video"]').remove();
+    }
+  });
