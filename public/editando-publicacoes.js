@@ -377,7 +377,7 @@ if (typeof io !== 'undefined') {
 
   $(window).load(function(){
 
-    if( $(window).width() < 768 ) {
+    if( window.UA.isMobile() ) {
       $('input.form-control, select.form-control, textarea.form-control').addClass('input-lg');
       $('.go').addClass('btn-lg btn-block');
       $('#type option[value="video"]').remove();
