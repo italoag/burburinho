@@ -67,7 +67,7 @@ function addBuzz(){
 
     if( type === 'video' ){
         buzz.url = '//www.youtube.com/embed/' + getYoutubeId(video);
-    }else if( type === 'photo' ||  type === 'quote'){
+    }else if(($.inArray(type, ['photo', 'quote']) !== -1) && photo !== ''){
         buzz.url = photo;
     } else if (type === 'gallery') {
         buzz.content = galleryListItems;
@@ -136,7 +136,7 @@ function createItemValueObject() {
 
   if( type === 'video' ){
       buzz.url = '//www.youtube.com/embed/' + getYoutubeId(video);
-  }else if( $.inArray(type, ['photo', 'quote']) !== -1){
+  }else if( $.inArray(buzz.type, ['photo', 'quote']) !== -1){
       buzz.url = photo;
   } else if (type === 'gallery') {
       buzz.content = galleryListItems;
@@ -165,7 +165,7 @@ $('body')
     $('input[name="local"]').val(buzz.local);
     $('textarea[name="texto"]').val(buzz.content);
 
-    if ($.inArray(type, ['photo', 'quote']) !== -1) {
+    if ($.inArray(buzz.type, ['photo', 'quote']) !== -1) {
       $('img.preview').attr('src', buzz.url);
       $('input.element.photo').val(buzz.url);
     }
@@ -186,6 +186,10 @@ $('body')
     $('#type option[value="' + draft.type +'"]').attr('selected', true);
     $('#type').trigger('change');
     $('input[name="local"]').val(draft.local);
+    if ($.inArray(draft.type, ['photo', 'quote']) !== -1) {
+      $('.element.photo.preview').attr('src', draft.url);
+      $('input.element.photo').val(draft.url);
+    }
     $('textarea[name="texto"]').val(draft.content);
     $('html, body').animate({ scrollTop: 0 }, 'fast');
 })
