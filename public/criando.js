@@ -184,7 +184,7 @@ $('body').on('click', '.publish-message', function() {
     $('input[name="local"]').val(buzz.local);
     $('textarea[name="texto"]').val(buzz.content);
 
-    if ($.inArray(type, ['photo', 'quote']) !== -1) {
+    if ($.inArray(buzz.type, ['photo', 'quote']) !== -1 && buzz.url !== '') {
       $('img.preview').attr('src', buzz.url);
       $('input.element.photo').val(buzz.url);
     }
@@ -226,9 +226,15 @@ $('body').on('click', '.publish-message', function() {
     var draft = drafts[draftId];
     itemEditIsDraft = true;
 
+	console.log(draft);
     $('.draft-list tbody tr:eq(' + draftId + ')').addClass('is-hidden');
     $('#type option[value="' + draft.type +'"]').attr('selected', true);
     $('#type').trigger('change');
+
+    if ($.inArray(draft.type, ['photo', 'quote']) !== -1 && draft.url !== '') {
+      $('img.preview').attr('src', draft.url);
+      $('input.element.photo').val(draft.url);
+    }
     $('input[name="local"]').val(draft.local);
     $('textarea[name="texto"]').val(draft.content);
     $('html, body').animate({ scrollTop: 0 }, 'fast');
