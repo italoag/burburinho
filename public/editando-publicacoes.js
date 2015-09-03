@@ -86,7 +86,7 @@ function addBuzz(){
 function resetForm() {
   $('input.local, textarea.text, input.video, input.photo').val('');
   $('#type').trigger('change');
-  $('.element.photo.preview').attr('src', 'http://farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg');
+  $('.element.photo.preview').attr('src', '//farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg');
   $('.type').hide();
 }
 
