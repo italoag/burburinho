@@ -39,7 +39,7 @@
 
     sendMessage(buzz);
 
-    $('input.local, textarea.text, input.video, input.photo').val('');
+    $('input.local, textarea.text, input.video, input.photo, input.author').val('');
     $('.element.photo.preview').attr('src', 'http://farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg');
   }
 

@@ -61,6 +61,8 @@ function addBuzz(){
     var local     = $('input.local').val();
     var timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
     var content   = $('textarea.text').val();
+    var author   = !!$('input.author')[0] ? $('input.author').val() : 'Redator';
+
     var video      = $('input.video').val();
     var photo      = $('input.photo').val();
     var type = $('#type').val();
@@ -68,7 +70,7 @@ function addBuzz(){
     var buzz = {
         local: local,
         timestamp: timestamp,
-        author: 'Redator',
+        author: author,
         type: type
     };
 
@@ -91,7 +93,7 @@ function addBuzz(){
 }
 
 function resetForm() {
-  $('input.local, textarea.text, input.video, input.photo').val('');
+  $('input.local, textarea.text, input.video, input.photo, input.author').val('');
   $('#type').trigger('change');
   $('.element.photo.preview').attr('src', 'http://farm1.staticflickr.com/695/20543448415_4efb795e63_b.jpg');
 }
@@ -140,6 +142,10 @@ function createItemValueObject() {
       type: type
   };
 
+  if (!!$('input.author')[0]) {
+  	buzz.author = $('input.author').val();
+  }
+
   if( type === 'video' ){
       buzz.url = '//www.youtube.com/embed/' + getYoutubeId(video);
   }else if( $.inArray(type, ['photo', 'quote']) !== -1){
@@ -182,6 +188,9 @@ $('body').on('click', '.publish-message', function() {
     $('#type option[value="' + buzz.type +'"]').attr('selected', true);
 
     $('input[name="local"]').val(buzz.local);
+    if (!!$('input.author')[0]){
+    	$('input.author').val(buzz.author);
+    }
     $('textarea[name="texto"]').val(buzz.content);
 
     if ($.inArray(buzz.type, ['photo', 'quote']) !== -1 && buzz.url !== '') {
@@ -226,7 +235,6 @@ $('body').on('click', '.publish-message', function() {
     var draft = drafts[draftId];
     itemEditIsDraft = true;
 
-	console.log(draft);
     $('.draft-list tbody tr:eq(' + draftId + ')').addClass('is-hidden');
     $('#type option[value="' + draft.type +'"]').attr('selected', true);
     $('#type').trigger('change');
@@ -236,6 +244,9 @@ $('body').on('click', '.publish-message', function() {
       $('input.element.photo').val(draft.url);
     }
     $('input[name="local"]').val(draft.local);
+    if (!!$('input.author')[0]){
+    	$('input.author').val(draft.author);
+    }
     $('textarea[name="texto"]').val(draft.content);
     $('html, body').animate({ scrollTop: 0 }, 'fast');
 })
