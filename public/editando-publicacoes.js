@@ -312,9 +312,14 @@ $('div.element.photo').uploadFile({
 $('.type, .multiple-image').hide();
 
 function getSocketIOUrl(){
-  return window.location.origin.indexOf('localhost') === -1 ?
-          '//burburinho.herokuapp.com' :
-          '//localhost:5000';
+    var origin = window.location.origin;
+    if(origin.indexOf('localhost') !== -1) {
+        return '//localhost:5000';
+    } else if(origin.indexOf('test') !== -1) {
+        return '//test-burburinho.herokuapp.com';
+    } else {
+        return '//burburinho.herokuapp.com';
+    }
 }
 
 function updateDraftList(buzz, showMessage, index){
