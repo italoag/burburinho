@@ -190,6 +190,11 @@ $('body')
       $('.element.photo.preview').attr('src', draft.url);
       $('input.element.photo').val(draft.url);
     }
+
+    if (draft.type === 'video') {
+      $('input.video').val(window.location.protocol + draft.url);
+    }
+
     $('textarea[name="texto"]').val(draft.content);
     $('html, body').animate({ scrollTop: 0 }, 'fast');
 })

@@ -198,6 +198,10 @@ $('body').on('click', '.publish-message', function() {
       $('input.element.photo').val(buzz.url);
     }
 
+    if (buzz.type === 'video') {
+      $('input.video').val(window.location.protocol + buzz.url);
+    }
+
     $('html, body').animate({ scrollTop: 0 }, 'fast');
 })
 .on('click', '.delete-draft', function(){
@@ -246,6 +250,10 @@ $('body').on('click', '.publish-message', function() {
     $('input[name="local"]').val(draft.local);
     if (!!$('input.author')[0]){
     	$('input.author').val(draft.author);
+    }
+
+    if (draft.type === 'video') {
+      $('input.video').val(window.location.protocol + draft.url);
     }
     $('textarea[name="texto"]').val(draft.content);
     $('html, body').animate({ scrollTop: 0 }, 'fast');
