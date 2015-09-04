@@ -71,7 +71,8 @@ function addBuzz(){
         local: local,
         timestamp: timestamp,
         author: author,
-        type: type
+        type: type,
+        content: content
     };
 
     if( type === 'video' ){
@@ -80,10 +81,6 @@ function addBuzz(){
         buzz.url = photo;
     } else if (type === 'gallery') {
         buzz.content = galleryListItems;
-    }
-
-    if(content !== ''){
-        buzz.content = content;
     }
 
     buzzs.push(buzz);
@@ -139,7 +136,8 @@ function createItemValueObject() {
   var buzz = {
       local: local,
       timestamp: timestamp,
-      type: type
+      type: type,
+      content: content
   };
 
   if (!!$('input.author')[0]) {
@@ -152,10 +150,6 @@ function createItemValueObject() {
       buzz.url = photo;
   } else if (type === 'gallery') {
       buzz.content = galleryListItems;
-  }
-
-  if(content !== ''){
-      buzz.content = content;
   }
 
   return buzz;
