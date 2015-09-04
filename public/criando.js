@@ -313,7 +313,7 @@ $('#type').on('change', function(e){
         var inputs = typeAndInputs[type];
         $('.element').hide();
         var previewImage = $('img.preview').data('src');
-        $('img.preview').attr('src',previewImage);
+        $('img.preview').attr('src', previewImage);
 
         inputs.forEach(function(e){
             $(e).show();
@@ -326,7 +326,7 @@ $('#type').on('change', function(e){
             $('.multiple-image').hide();
             $('.multiple-image .preview').remove();
             galleryListItems = [];
-            $('.single-image').show();
+            $('.single-image, .element.photo').show();
         }
 
         $('.type').show();
