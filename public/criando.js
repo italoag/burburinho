@@ -453,7 +453,7 @@ function updateDraftList(buzz, showMessage, index){
 
     list.append(div);
     if (!!showMessage) {
-      createAlertMessage('Rascunhos e aguardando confirmação de envio');
+      createAlertMessage('Chegou um novo burburinho de uma pessoa colaboradora!');
     }
 }
 
