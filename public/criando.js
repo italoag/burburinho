@@ -326,7 +326,7 @@ $('#type').on('change', function(e){
             $('.multiple-image').hide();
             $('.multiple-image .preview').remove();
             galleryListItems = [];
-            $('.single-image, .element.photo').show();
+            $('.single-image').show();
         }
 
         $('.type').show();
