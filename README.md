@@ -1,4 +1,5 @@
 BURBURINHO [![Build Status](https://snap-ci.com/brasil-de-fato/burburinho/branch/master/build_image)](https://snap-ci.com/brasil-de-fato/burburinho/branch/master)
+[![Coverage Status](https://coveralls.io/repos/brasil-de-fato/burburinho/badge.svg?branch=master)](https://coveralls.io/r/brasil-de-fato/burburinho?branch=master)
 
 **Run**
 ```
