@@ -1,0 +1,9 @@
+[
+  {
+    "name"       : "cobertura-backend",
+    "script"     : "./index.js",
+    "instances"  : 1,
+    "merge_logs" : true,
+    "node_args"  : "--harmony"
+  }
+]
