@@ -19,11 +19,12 @@
   "scripts": {
     "start": "node index.js",
     "nodemon": "./node_modules/.bin/nodemon index.js  -e js,json",
-    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly --  test/specs --recursive -R spec --timeout 10000 && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "test": "EDITOR_USERNAME=editor EDITOR_PASSWORD=pass COLLABORATOR_USERNAME=collaborator COLLABORATOR_PASSWORD=pass DATABASE_URL=mongodb://localhost/cobertura ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly --  test/specs --recursive -R spec --timeout 10000",
     "jshint": "./node_modules/.bin/jshint .",
     "protractor": "./node_modules/.bin/protractor protractor.conf.js",
     "updateWebBrowser": "./node_modules/protractor/bin/webdriver-manager update",
-    "startWebBrowser": "./node_modules/protractor/bin/webdriver-manager start"
+    "startWebBrowser": "./node_modules/protractor/bin/webdriver-manager start",
+    "coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "devDependencies": {
     "coveralls": "^2.11.4",
