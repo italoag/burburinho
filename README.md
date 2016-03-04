@@ -18,7 +18,7 @@ EDITOR_USERNAME=<editor username>
 EDITOR_PASSWORD=<editor password>
 COLLABORATOR_USERNAME=<collaborator username>
 COLLABORATOR_PASSWORD=<collaborator password>
-DATABASE_URL=<mongo database url>
+COBERTURA_DATABASE_URL=<mongo database url>
 ```
 
 ## Installing node packages

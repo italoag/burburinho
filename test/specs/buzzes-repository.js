@@ -6,7 +6,7 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var buzzesRepository = require('../../lib/buzzes-repository.js')();
 
-var DATABASE_URL  = process.env.DATABASE_URL;
+var DATABASE_URL  = process.env.COBERTURA_DATABASE_URL;
 
 var connect = function(callback){
   MongoClient.connect(DATABASE_URL, function(err, db){
