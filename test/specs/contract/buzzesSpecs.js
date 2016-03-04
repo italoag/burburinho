@@ -96,6 +96,31 @@ describe('Buzzes:', function() {
 
   });
 
+  it('DELETE: /api/buzzes/<id>', function(done){
+
+    api.post('/api/buzzes')
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .send(buzz)
+      .expect(201)
+      .end(function(err, res) {
+        if (err) return done(err);
+
+        var buzzId = res.body.id;
+
+        api.delete('/api/buzzes/' + buzzId)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect(204)
+          .end(function(err, res){
+            done(err);
+          });
+      });
+  });
+
+  it('UNAUTHENTICATED DELETE: /api/buzzes', function(done) {
+    api.delete('/api/buzzes/' + 123)
+      .expect(401, done);
+  });
+
   it('UNAUTHENTICATED PUT: /api/buzzes/<id>', function(done){
     api.post('/api/buzzes')
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
