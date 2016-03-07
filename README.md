@@ -14,10 +14,10 @@ Burburinho is the backend and administrative interface of [cobertura](https://gi
 Before running Burburinho or its tests, it is necessary to define the following environment variables: 
 
 ```
-EDITOR_USERNAME=<editor username>
-EDITOR_PASSWORD=<editor password>
-COLLABORATOR_USERNAME=<collaborator username>
-COLLABORATOR_PASSWORD=<collaborator password>
+COBERTURA_EDITOR_USERNAME=<editor username>
+COBERTURA_EDITOR_PASSWORD=<editor password>
+COBERTURA_COLLABORATOR_USERNAME=<collaborator username>
+COBERTURA_COLLABORATOR_PASSWORD=<collaborator password>
 COBERTURA_DATABASE_URL=<mongo database url>
 ```
 

@@ -26,7 +26,7 @@ describe('Buzzes:', function() {
 
   it('POST: /api/buzzes', function(done){
     api.post('/api/buzzes')
-      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
       .send(buzz)
       .expect(201)
       .end(function(err, res) {
@@ -38,7 +38,7 @@ describe('Buzzes:', function() {
   it('GET: /api/buzzes', function(done){
 
     api.post('/api/buzzes')
-      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
       .send(buzz)
       .expect(201);
 
@@ -75,7 +75,7 @@ describe('Buzzes:', function() {
     buzz.local = 'MyLocal' + Math.random().toString(36).substring(7);
 
     api.post('/api/buzzes')
-      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
       .send(buzz)
       .expect(201)
       .end(function(err, res) {
@@ -99,7 +99,7 @@ describe('Buzzes:', function() {
   it('DELETE: /api/buzzes/<id>', function(done){
 
     api.post('/api/buzzes')
-      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
       .send(buzz)
       .expect(201)
       .end(function(err, res) {
@@ -108,7 +108,7 @@ describe('Buzzes:', function() {
         var buzzId = res.body.id;
 
         api.delete('/api/buzzes/' + buzzId)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
           .expect(204)
           .end(function(err, res){
             done(err);
@@ -123,7 +123,7 @@ describe('Buzzes:', function() {
 
   it('UNAUTHENTICATED PUT: /api/buzzes/<id>', function(done){
     api.post('/api/buzzes')
-      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
       .send(buzz)
       .expect(201)
       .end(function(err, res) {
@@ -144,7 +144,7 @@ describe('Buzzes:', function() {
   it('PUT: /api/buzzes/<id>', function(done){
 
     api.post('/api/buzzes')
-      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
       .send(buzz)
       .expect(201)
       .end(function(err, res) {
@@ -156,7 +156,7 @@ describe('Buzzes:', function() {
 
         buzz.local = 'MyLocal' + Math.random().toString(36).substring(7);
         api.put('/api/buzzes/' + buzzId)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
           .send(buzz)
           .expect(204)
           .end(function(err, res) {
@@ -165,7 +165,7 @@ describe('Buzzes:', function() {
             }
 
             api.get('/api/buzzes')
-              .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+              .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
               .expect(200)
               .expect('Content-Type', /json/)
               .end(function(err, res) {

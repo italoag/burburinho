@@ -33,7 +33,7 @@ describe('Drafts:', function() {
 
   it('EDITOR CREDENTIALS POST: /api/drafts', function(done){
     api.post('/api/drafts')
-      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
       .send(buzzDraft)
       .expect(201)
       .end(function(err, res) {
@@ -44,7 +44,7 @@ describe('Drafts:', function() {
 
   it('COLLABORATOR CREDENTIALS POST: /api/drafts', function(done){
     api.post('/api/drafts')
-      .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
+      .auth(process.env.COBERTURA_COLLABORATOR_USERNAME, process.env.COBERTURA_COLLABORATOR_PASSWORD)
       .send(buzzDraft)
       .expect(201)
       .end(function(err, res) {
@@ -57,12 +57,12 @@ describe('Drafts:', function() {
     buzzDraft.local = 'MyLocal' + Math.random().toString(36).substring(7);
 
     api.post('/api/drafts')
-      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
       .send(buzzDraft)
       .expect(201)
       .end(function() {
           api.get('/api/drafts')
-            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+            .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
             .expect(200)
             .expect('Content-Type', /json/)
             .end(function(err, res) {
@@ -98,7 +98,7 @@ describe('Drafts:', function() {
   it('DELETE: /api/drafts/<id>', function(done){
 
     api.post('/api/drafts')
-      .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
+      .auth(process.env.COBERTURA_COLLABORATOR_USERNAME, process.env.COBERTURA_COLLABORATOR_PASSWORD)
       .send(buzzDraft)
       .expect(201)
       .end(function(err, res) {
@@ -109,7 +109,7 @@ describe('Drafts:', function() {
         var draftId = res.body.id;
 
         api.delete('/api/drafts/' + draftId)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_USERNAME)
+          .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.EDITOR_USERNAME)
           .expect(200);
 
         done();
@@ -118,7 +118,7 @@ describe('Drafts:', function() {
 
   it('UNAUTHENTICATED PUT: /api/drafts/<id>', function(done){
     api.post('/api/drafts')
-      .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
+      .auth(process.env.COBERTURA_COLLABORATOR_USERNAME, process.env.COBERTURA_COLLABORATOR_PASSWORD)
       .send(buzzDraft)
       .expect(201)
       .end(function(err, res) {
@@ -139,7 +139,7 @@ describe('Drafts:', function() {
   it('PUT: /api/drafts/<id>', function(done){
 
     api.post('/api/drafts')
-      .auth(process.env.COLLABORATOR_USERNAME, process.env.COLLABORATOR_PASSWORD)
+      .auth(process.env.COBERTURA_COLLABORATOR_USERNAME, process.env.COBERTURA_COLLABORATOR_PASSWORD)
       .send(buzzDraft)
       .expect(201)
       .end(function(err, res) {
@@ -151,7 +151,7 @@ describe('Drafts:', function() {
 
         buzzDraft.local = 'MyLocal' + Math.random().toString(36).substring(7);
         api.put('/api/drafts/' + draftId)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
           .send(buzzDraft)
           .expect(204)
           .end(function(err, res) {
@@ -160,7 +160,7 @@ describe('Drafts:', function() {
             }
 
             api.get('/api/drafts')
-                .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+                .auth(process.env.COBERTURA_EDITOR_USERNAME, process.env.COBERTURA_EDITOR_PASSWORD)
                 .expect(200)
                 .expect('Content-Type', /json/)
                 .end(function(err, res) {
