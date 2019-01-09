@@ -1,0 +1,19 @@
+machine:
+  environment:
+  node:
+    version: 0.10.37
+
+dependencies:
+  override:
+    - npm cache clean
+    - npm install
+
+test:
+  override:
+    - npm test:
+        environment:
+          EDITOR_USERNAME: "test"
+          EDITOR_PASSWORD: "test"
+          DATABASE_URL: "mongodb://snap-test:r4OiRFEqdMWNhHjNyYKg@ds033133.mongolab.com:33133/bdf-test"
+          COLLABORATOR_USERNAME: "joao"
+          COLLABORATOR_PASSWORD: "joaoninguem"

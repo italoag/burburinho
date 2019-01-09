@@ -154,12 +154,7 @@ nav{
   z-index: 3;
 }
 .menu.is-closed {
-  position: absolute;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.2s linear;
+  display:none;
 }
 .menu-item a {
   font-size: 2.8em;

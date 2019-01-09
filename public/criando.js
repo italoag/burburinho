@@ -326,7 +326,7 @@ $('#type').on('change', function(e){
             $('.multiple-image').hide();
             $('.multiple-image .preview').remove();
             galleryListItems = [];
-            $('.single-image, .element.photo').show();
+            $('.single-image').show();
         }
 
         $('.type').show();
@@ -453,7 +453,7 @@ function updateDraftList(buzz, showMessage, index){
 
     list.append(div);
     if (!!showMessage) {
-      createAlertMessage('Rascunhos e aguardando confirmação de envio');
+      createAlertMessage('Chegou um novo burburinho de uma pessoa colaboradora!');
     }
 }
 
